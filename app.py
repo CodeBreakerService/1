@@ -3,16 +3,22 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-# Разрешаем доступ со всех доменов, чтобы GitHub Pages мог отправлять данные
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 def init_db():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
+    # Таблица заказов
     cursor.execute('''CREATE TABLE IF NOT EXISTS orders 
-                      (id INTEGER PRIMARY KEY AUTOINCREMENT, customer TEXT, text TEXT)''')
+                      (id INTEGER PRIMARY KEY AUTOINCREMENT, customer TEXT, text TEXT, status TEXT DEFAULT 'Ожидает')''')
+    # Таблица сообщений
     cursor.execute('''CREATE TABLE IF NOT EXISTS messages 
                       (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER, sender TEXT, text TEXT, role TEXT)''')
+    # Проверка на наличие колонки status (на случай обновления старой базы)
+    try:
+        cursor.execute("ALTER TABLE orders ADD COLUMN status TEXT DEFAULT 'Ожидает'")
+    except:
+        pass
     conn.commit()
     conn.close()
 
@@ -29,7 +35,7 @@ def create_order():
     data = request.json
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO orders (customer, text) VALUES (?, ?)", 
+    cursor.execute("INSERT INTO orders (customer, text, status) VALUES (?, ?, 'Ожидает')", 
                    (data.get("name"), data.get("text")))
     conn.commit()
     conn.close()
@@ -39,10 +45,20 @@ def create_order():
 def get_orders():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT id, customer, text FROM orders ORDER BY id DESC")
+    cursor.execute("SELECT id, customer, text, status FROM orders ORDER BY id DESC")
     rows = cursor.fetchall()
     conn.close()
-    return jsonify([{"id": r[0], "customer": r[1], "text": r[2]} for r in rows])
+    return jsonify([{"id": r[0], "customer": r[1], "text": r[2], "status": r[3]} for r in rows])
+
+@app.route('/api/order/status', methods=['POST'])
+def update_status():
+    data = request.json
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("UPDATE orders SET status = ? WHERE id = ?", (data.get("status"), data.get("order_id")))
+    conn.commit()
+    conn.close()
+    return jsonify({"status": "success"})
 
 @app.route('/api/chat/<int:order_id>', methods=['GET'])
 def get_chat(order_id):
@@ -66,5 +82,4 @@ def send_msg():
 
 if __name__ == '__main__':
     init_db()
-    # Порт 10000 обязателен для запуска на Render
     app.run(host='0.0.0.0', port=10000)
