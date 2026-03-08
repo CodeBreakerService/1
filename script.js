@@ -1,6 +1,6 @@
 // ВАЖНО: Когда запустишь бэкенд в интернет (например, на Render), 
 // замени "http://127.0.0.1:5000" на свою новую ссылку!
-const API_URL = "http://127.0.0.1:5000"; 
+const API_URL = "https://one-1-zlsw.onrender.com"; 
 
 let currentUser = "Гость";
 let currentRole = "user";
