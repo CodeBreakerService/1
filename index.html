@@ -10,66 +10,54 @@
 <body>
     <div class="nav">
         <div class="user-info">
-            <span class="material-icons" style="vertical-align: middle;">account_circle</span>
-            <span id="n-disp" style="font-weight: bold; margin-left: 5px;">Гость</span>
-            <span id="r-disp"></span>
+            <span class="material-icons">account_circle</span>
+            <span id="n-disp" style="margin-left: 5px;">Гость</span> <span id="r-disp"></span>
         </div>
-        <button class="icon-btn" onclick="openM('pModal')">
-            <span class="material-icons">settings</span>
-        </button>
+        <button class="icon-btn" onclick="openM('pModal')"><span class="material-icons">settings</span></button>
     </div>
 
     <div class="hero">
-        <img src="https://i.postimg.cc/nh49D3Kz/Picsart-26-03-07-16-24-17-930.png" class="logo-img" alt="CodeBreaker Logo">
+        <img src="https://i.postimg.cc/pdY3TFpF/Picsart-26-03-07-14-57-24-968.jpg" class="logo-img" alt="CodeBreaker Logo">
         <h1>CodeBreaker Service</h1>
-        <p class="desc">Мы — бренд производства бесплатных сайтов. Нажми на кнопку "Заказать сайт", напиши о чем он будет и укажи все свои пожелания.</p>
+        <p>Мы — бренд производства бесплатных сайтов. Опишите проект, и мы его сделаем!</p>
     </div>
 
     <div class="divider"></div>
-
     <div style="text-align: center;">
-        <button class="btn main-btn" onclick="openOrderModal()">
-            <span class="material-icons">add_task</span> ЗАКАЗАТЬ САЙТ
-        </button>
+        <button class="btn main-btn" onclick="openOrderModal()">ЗАКАЗАТЬ САЙТ</button>
     </div>
 
     <div id="mod-list" class="hidden mod-section">
-        <div class="divider"></div>
-        <h3><span class="material-icons" style="vertical-align: middle;">admin_panel_settings</span> Заказы (Панель Модератора):</h3>
+        <h3>Панель модератора:</h3>
         <button class="btn" onclick="refreshOrders()" style="font-size: 0.9rem; padding: 10px; margin-bottom: 10px;">Обновить список</button>
         <div id="orders-box"></div>
     </div>
 
-    <div id="pModal" class="modal">
-        <div class="modal-content">
-            <h3><span class="material-icons" style="vertical-align: middle;">manage_accounts</span> Настройки профиля</h3>
-            <input type="text" id="in-name" placeholder="Введите ваше имя">
-            <input type="password" id="in-code" placeholder="Секретный код (для модераторов)">
-            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="saveP()">Сохранить профиль</button>
-            <button class="text-btn" onclick="closeM('pModal')">Закрыть</button>
+    <div id="pModal" class="modal"><div class="modal-content">
+        <h3>Профиль</h3>
+        <input type="text" id="in-name" placeholder="Имя">
+        <input type="password" id="in-code" placeholder="Код модератора">
+        <button class="btn" style="width: 100%; margin-top: 10px;" onclick="saveP()">Сохранить</button>
+        <button class="text-btn" style="margin-top: 10px;" onclick="closeM('pModal')">Закрыть</button>
+    </div></div>
+
+    <div id="oModal" class="modal"><div class="modal-content">
+        <h3 id="chat-title">Новый заказ</h3>
+        
+        <div id="order-ui">
+            <textarea id="o-text" rows="4" placeholder="Опишите ваш сайт..."></textarea>
+            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="sendO()">Отправить</button>
         </div>
-    </div>
-
-    <div id="oModal" class="modal">
-        <div class="modal-content">
-            <h3 id="chat-title"><span class="material-icons" style="vertical-align: middle;">rate_review</span> Новый запрос</h3>
-            
-            <div id="order-ui">
-                <textarea id="o-text" rows="5" placeholder="Подробно опишите, какой сайт вам нужен..."></textarea>
-                <button class="btn" style="width: 100%; margin-top: 10px;" onclick="sendO()">Отправить модератору</button>
+        
+        <div id="chat-ui" class="hidden">
+            <div id="chat-msgs" class="chat-container"></div>
+            <div style="display:flex; gap:5px;">
+                <input type="text" id="chat-input" placeholder="Сообщение..." style="margin: 0; flex-grow: 1;">
+                <button class="btn" style="padding: 10px;" onclick="sendMsg()">></button>
             </div>
-
-            <div id="chat-ui" class="hidden">
-                <div id="chat-msgs" class="chat-container"></div>
-                <div style="display: flex; gap: 5px;">
-                    <input type="text" id="chat-input" placeholder="Написать сообщение..." style="margin: 0; flex-grow: 1;">
-                    <button class="btn" style="padding: 10px;" onclick="sendMsg()"><span class="material-icons">send</span></button>
-                </div>
-            </div>
-
-            <button class="text-btn" style="margin-top: 15px;" onclick="closeChatModal()">Отмена / Назад</button>
         </div>
-    </div>
+        <button class="text-btn" style="margin-top: 15px;" onclick="closeChatModal()">Назад / Закрыть</button>
+    </div></div>
 
     <script src="script.js"></script>
 </body>
